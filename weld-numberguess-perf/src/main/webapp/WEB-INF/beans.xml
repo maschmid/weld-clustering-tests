@@ -1,0 +1,12 @@
+<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+    <alternatives>
+<!--         <class>org.jboss.weld.examples.numberguess.MockGenerator</class> -->
+    </alternatives>
+    <decorators>
+        <class>org.jboss.weld.examples.numberguess.GuessCheckDecorator</class>
+    </decorators>
+    <interceptors>
+        <class>org.jboss.weld.examples.numberguess.AutoResetInterceptor</class>
+    </interceptors>
+</beans>
