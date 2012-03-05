@@ -19,12 +19,12 @@ public class EjbNumberGuessClusterTest extends NumberGuessClusterTest {
 				 .addClasses(AutoReset.class, AutoResetInterceptor.class, Game.class, GameLocal.class, 
 						 EjbGameBean.class, GuessCheckDecorator.class, MaxNumber.class, MockGenerator.class, 
 						 ProductionGenerator.class, Random.class)
-				 .addAsWebResource("home.xhtml")
-				 .addAsWebResource("index.html")
-				 .addAsWebResource("template.xhtml")
-				 .addAsWebInfResource("WEB-INF/beans-decorator.xml", "beans.xml")
-				 .addAsWebInfResource("WEB-INF/faces-config.xml")
-				 .addAsWebInfResource("WEB-INF/web.xml");
+				 .addAsWebResource("numberguess/home.xhtml", "home.xhtml")
+				 .addAsWebResource("numberguess/index.html", "index.html")
+				 .addAsWebResource("numberguess/template.xhtml", "template.xhtml")
+				 .addAsWebInfResource("numberguess/WEB-INF/beans-decorator.xml", "beans.xml")
+				 .addAsWebInfResource("numberguess/WEB-INF/faces-config.xml", "faces-config.xml")
+				 .addAsWebInfResource("numberguess/WEB-INF/web.xml", "web.xml");
 	 }
 	
 	 @Deployment(name = DEPLOYMENT1, managed=false, testable=false)

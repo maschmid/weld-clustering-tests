@@ -17,12 +17,12 @@ public class PlainNumberGuessClusterTest extends NumberGuessClusterTest {
 	 public static WebArchive createTestDeployment() {
 		 return ShrinkWrap.create(WebArchive.class, "weld-clustering-tests.war")
 				 .addPackage(Game.class.getPackage())
-				 .addAsWebResource("home.xhtml")
-				 .addAsWebResource("index.html")
-				 .addAsWebResource("template.xhtml")
-				 .addAsWebInfResource("WEB-INF/beans-plain.xml", "beans.xml")
-				 .addAsWebInfResource("WEB-INF/faces-config.xml")
-				 .addAsWebInfResource("WEB-INF/web.xml");
+				 .addAsWebResource("numberguess/home.xhtml", "home.xhtml")
+				 .addAsWebResource("numberguess/index.html", "index.html")
+				 .addAsWebResource("numberguess/template.xhtml", "template.xhtml")
+				 .addAsWebInfResource("numberguess/WEB-INF/beans-plain.xml", "beans.xml")
+				 .addAsWebInfResource("numberguess/WEB-INF/faces-config.xml", "faces-config.xml")
+				 .addAsWebInfResource("numberguess/WEB-INF/web.xml", "web.xml");
 	 }
 	
 	 @Deployment(name = DEPLOYMENT1, managed=false, testable=false)
