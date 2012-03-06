@@ -28,17 +28,10 @@ import org.jboss.arquillian.ajocado.locator.IdLocator;
 import org.jboss.arquillian.ajocado.locator.XPathLocator;
 import org.jboss.arquillian.container.test.api.ContainerController;
 import org.jboss.arquillian.container.test.api.Deployer;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static org.jboss.arquillian.ajocado.locator.LocatorFactory.id;
 import static org.jboss.arquillian.ajocado.locator.LocatorFactory.xp;
@@ -98,22 +91,6 @@ public abstract class NumberGuessClusterTest {
     String contextPath2;
     
     boolean browsersSwitched = false;
-    
-    /*
-   
-    @Deployment(name = DEPLOYMENT1, managed=false, testable=false)
-    @TargetsContainer(CONTAINER1)
-    public static WebArchive createTestDeployment1() {
-        return Deployments.createDeployment();
-    }
-    
-    @Deployment(name = DEPLOYMENT2, managed=false, testable=false)
-    @TargetsContainer(CONTAINER2)
-    public static WebArchive createTestDeployment2() {
-        return Deployments.createDeployment()
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "force-hashcode-change.txt");
-    }
-    */
     
     @Before
     public void before() throws MalformedURLException {
