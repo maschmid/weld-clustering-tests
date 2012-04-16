@@ -38,8 +38,7 @@ public class EjbGameBean implements Serializable, GameLocal {
     private int remainingGuesses;
 
     @Inject
-    @Random
-    Instance<Integer> randomNumber;
+    RandomStatelessEjb randomStatelessEjb;
 
     public int getNumber() {
         return number;
@@ -81,7 +80,7 @@ public class EjbGameBean implements Serializable, GameLocal {
         this.guess = 0;
         this.remainingGuesses = 10;
         this.biggest = maxNumber;
-        this.number = randomNumber.get();
+        this.number = randomStatelessEjb.getRandom();
     }
 
     public void validateNumberRange(FacesContext context, UIComponent toValidate, Object value) {

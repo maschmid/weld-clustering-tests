@@ -17,7 +17,7 @@ public class EjbNumberGuessClusterTest extends NumberGuessClusterTest {
 	 public static WebArchive createTestDeployment() {
 		 return ShrinkWrap.create(WebArchive.class, "weld-clustering-tests.war")
 				 .addClasses(AutoReset.class, AutoResetInterceptor.class, Game.class, GameLocal.class, 
-						 EjbGameBean.class, GuessCheckDecorator.class, MaxNumber.class, MockGenerator.class, 
+						 EjbGameBean.class, RandomStatelessEjb.class, GuessCheckDecorator.class, MaxNumber.class, MockGenerator.class, 
 						 ProductionGenerator.class, Random.class)
 				 .addAsWebResource("numberguess/home.xhtml", "home.xhtml")
 				 .addAsWebResource("numberguess/index.html", "index.html")
