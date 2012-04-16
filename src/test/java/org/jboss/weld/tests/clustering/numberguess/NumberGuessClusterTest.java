@@ -22,15 +22,10 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.arquillian.ajocado.framework.AjaxSelenium;
 import org.jboss.arquillian.ajocado.locator.IdLocator;
 import org.jboss.arquillian.ajocado.locator.XPathLocator;
-import org.jboss.arquillian.container.test.api.ContainerController;
-import org.jboss.arquillian.container.test.api.Deployer;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.InSequence;
-import org.junit.Before;
+import org.jboss.weld.tests.clustering.ClusterTestBase;
 import org.junit.Test;
 
 import static org.jboss.arquillian.ajocado.locator.LocatorFactory.id;
@@ -46,17 +41,11 @@ import static org.junit.Assert.assertTrue;
  * @author maschmid
  *
  */
-public abstract class NumberGuessClusterTest {
+public abstract class NumberGuessClusterTest extends ClusterTestBase {
    
     protected String MAIN_PAGE = "home.jsf";
     
     public static final long GRACE_TIME_TO_REPLICATE = 1000;
-    public static final long GRACE_TIME_TO_MEMBERSHIP_CHANGE = 5000;
-    
-    protected static final String CONTAINER1 = "container1"; 
-    protected static final String CONTAINER2 = "container2"; 
-    protected static final String DEPLOYMENT1 = "dep.container1";
-    protected static final String DEPLOYMENT2 = "dep.container2";
     
     protected IdLocator GUESS_MESSAGES = id("numberGuess:messages");
     protected XPathLocator GUESS_STATUS = xp("//div[contains(text(),'I'm thinking of ')]");
@@ -77,27 +66,9 @@ public abstract class NumberGuessClusterTest {
     protected Pattern guessesNumberPattern = Pattern.compile("You have (\\d+) guesses remaining."); 
     
     private GameState gameState;
-   
-    @ArquillianResource
-    private ContainerController controller;
     
-    @ArquillianResource
-    private Deployer deployer;
-    
-    @Drone
-    AjaxSelenium selenium;
-    
-    String contextPath1;
-    String contextPath2;
     
     boolean browsersSwitched = false;
-    
-    @Before
-    public void before() throws MalformedURLException {
-        // We can't use @ArquillianResource URL here as we are using unmanaged deployments
-        contextPath1 = System.getProperty("node1.contextPath");
-        contextPath2 = System.getProperty("node2.contextPath");
-    }
     
     protected void resetForm() {
         waitForHttp(selenium).click(GUESS_RESTART);
@@ -123,36 +94,7 @@ public abstract class NumberGuessClusterTest {
         String text = selenium.getText(GUESS_MESSAGES);
         return LOSE_MSG.equals(text);
     }
-    
-    public String getAddressForSecondInstance() {
-        String loc = selenium.getLocation().toString();
-        String[] parsedStrings = loc.split("/");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 4; i < parsedStrings.length; i++) {
-            sb.append("/").append(parsedStrings[i]);
-        }
 
-        String newAddress = sb.toString();
-        String firstPart = "";
-        String sid = "";         
-        
-        //if (selenium.isCookiePresent("JSESSIONID")) {
-        if (!newAddress.contains(";")) {
-            sid = selenium.getCookieByName("JSESSIONID").getValue();
-            firstPart = newAddress;
-        } else {
-            // get sessionid directly from browser URL if JSESSIONID cookie is not
-            // present
-            firstPart = newAddress.substring(0, newAddress.indexOf(";"));
-            sid = loc.substring(loc.indexOf("jsessionid=") + "jsessionid=".length(), loc.length());
-        }
-
-        newAddress = firstPart + ";jsessionid=" + sid;
-                
-        selenium.deleteAllVisibleCookies();
-
-        return newAddress;
-    }
     
     private Integer getRemainingGuesses() {
         Matcher m = guessesNumberPattern.matcher(selenium.getBodyText());
