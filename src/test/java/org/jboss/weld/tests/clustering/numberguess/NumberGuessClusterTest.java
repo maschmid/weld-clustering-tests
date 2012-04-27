@@ -27,6 +27,7 @@ import org.jboss.arquillian.ajocado.locator.XPathLocator;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.weld.tests.clustering.ClusterTestBase;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import static org.jboss.arquillian.ajocado.locator.LocatorFactory.id;
 import static org.jboss.arquillian.ajocado.locator.LocatorFactory.xp;
@@ -197,6 +198,7 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
     }
     
     @Test
+    @Ignore
     @InSequence(2)
     public void guessingWithInterleavingTest() throws MalformedURLException, InterruptedException {
         controller.start(CONTAINER1);
