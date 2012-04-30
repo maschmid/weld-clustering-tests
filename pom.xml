@@ -188,6 +188,9 @@
     <properties>
         <node1.contextPath>http://127.0.1.1:8080/weld-clustering-tests</node1.contextPath>
         <node2.contextPath>http://127.0.2.1:8080/weld-clustering-tests</node2.contextPath>
+        <node1.jbossHome></node1.jbossHome>
+        <node2.jbossHome></node2.jbossHome>
+        <jboss.as7.version>7.1.1.Final</jboss.as7.version>
     </properties>
 
 </project>
