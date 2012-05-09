@@ -1,13 +1,10 @@
 package org.jboss.weld.tests.clustering.translator;
 
-import static org.jboss.arquillian.ajocado.Ajocado.waitForHttp;
-import static org.jboss.arquillian.ajocado.locator.LocatorFactory.id;
 import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.jboss.arquillian.ajocado.locator.IdLocator;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
@@ -18,19 +15,20 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.weld.tests.clustering.ClusterTestBase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 
 @RunWith(Arquillian.class)
 @RunAsClient
 public class TranslatorClusterTest extends ClusterTestBase
 {
-   protected String MAIN_PAGE = "home.jsf";
+   private static final String MAIN_PAGE = "home.jsf";
 
-   protected IdLocator INPUT_AREA = id("TranslatorMain:text");
-   protected IdLocator TRANSLATE_BUTTON = id("TranslatorMain:button");
-   protected String ONE_SENTENCE = "This is only one sentence.";
-   protected String MORE_SENTENCES = "First sentence. Second and last sentence.";
-   protected String ONE_SENTENCE_TRANSLATED = "Lorem ipsum dolor sit amet.";
-   protected String MORE_SENTENCES_TRANSLATED = "Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.";
+   private static final By INPUT_AREA = By.id("TranslatorMain:text");
+   private static final By TRANSLATE_BUTTON = By.id("TranslatorMain:button");
+   private static final String ONE_SENTENCE = "This is only one sentence.";
+   private static final String MORE_SENTENCES = "First sentence. Second and last sentence.";
+   private static final String ONE_SENTENCE_TRANSLATED = "Lorem ipsum dolor sit amet.";
+   private static final String MORE_SENTENCES_TRANSLATED = "Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.";
 
    public static WebArchive createTestDeployment() {
       return ShrinkWrap.create(WebArchive.class, "weld-clustering-tests.war")
@@ -64,16 +62,16 @@ public class TranslatorClusterTest extends ClusterTestBase
       controller.start(CONTAINER2);
       deployer.deploy(DEPLOYMENT2);
 
-      selenium.open(new URL(contextPath1 + "/" + MAIN_PAGE));
+      driver.navigate().to(new URL(contextPath1 + "/" + MAIN_PAGE));
       
-      selenium.type(INPUT_AREA, ONE_SENTENCE);
-      waitForHttp(selenium).click(TRANSLATE_BUTTON);
-      assertTrue("One sentence translated into latin expected.", selenium.isTextPresent(ONE_SENTENCE_TRANSLATED));
-      selenium.type(INPUT_AREA, MORE_SENTENCES);
-      waitForHttp(selenium).click(TRANSLATE_BUTTON);
-      assertTrue("More sentences translated into latin expected.", selenium.isTextPresent(MORE_SENTENCES_TRANSLATED));
+      driver.findElement(INPUT_AREA).sendKeys(ONE_SENTENCE);
+      driver.findElement(TRANSLATE_BUTTON).click();
+      assertTrue("One sentence translated into latin expected.", driver.getPageSource().contains(ONE_SENTENCE_TRANSLATED));
+      driver.findElement(INPUT_AREA).sendKeys(MORE_SENTENCES);
+      driver.findElement(TRANSLATE_BUTTON).click();
+      assertTrue("More sentences translated into latin expected.", driver.getPageSource().contains(MORE_SENTENCES_TRANSLATED));
       
-      assertTrue("Expected 3 sentences translated", selenium.isTextPresent("3 sentences translated."));
+      assertTrue("Expected 3 sentences translated", driver.getPageSource().contains("3 sentences translated."));
 
       deployer.undeploy(DEPLOYMENT1);
       controller.stop(CONTAINER1);
@@ -81,18 +79,18 @@ public class TranslatorClusterTest extends ClusterTestBase
       Thread.sleep(GRACE_TIME_TO_REPLICATE);
 
       String address = getAddressForSecondInstance();
-      selenium.open(new URL(contextPath2 + "/" + address));
+      driver.navigate().to(new URL(contextPath2 + "/" + address));
 
-      assertTrue("Expected 3 sentences translated", selenium.isTextPresent("3 sentences translated."));
+      assertTrue("Expected 3 sentences translated", driver.getPageSource().contains("3 sentences translated."));
       
-      selenium.type(INPUT_AREA, ONE_SENTENCE);
-      waitForHttp(selenium).click(TRANSLATE_BUTTON);
-      assertTrue("One sentence translated into latin expected.", selenium.isTextPresent(ONE_SENTENCE_TRANSLATED));
-      selenium.type(INPUT_AREA, MORE_SENTENCES);
-      waitForHttp(selenium).click(TRANSLATE_BUTTON);
-      assertTrue("More sentences translated into latin expected.", selenium.isTextPresent(MORE_SENTENCES_TRANSLATED));
+      driver.findElement(INPUT_AREA).sendKeys(ONE_SENTENCE);
+      driver.findElement(TRANSLATE_BUTTON).click();
+      assertTrue("One sentence translated into latin expected.", driver.getPageSource().contains(ONE_SENTENCE_TRANSLATED));
+      driver.findElement(INPUT_AREA).sendKeys(MORE_SENTENCES);
+      driver.findElement(TRANSLATE_BUTTON).click();
+      assertTrue("More sentences translated into latin expected.", driver.getPageSource().contains(MORE_SENTENCES_TRANSLATED));
       
-      assertTrue("Expected 6 sentences translated", selenium.isTextPresent("6 sentences translated."));
+      assertTrue("Expected 6 sentences translated", driver.getPageSource().contains("6 sentences translated."));
 
       deployer.undeploy(DEPLOYMENT2);
       controller.stop(CONTAINER2);

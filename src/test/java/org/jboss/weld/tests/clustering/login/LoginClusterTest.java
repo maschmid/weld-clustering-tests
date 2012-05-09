@@ -1,18 +1,8 @@
 package org.jboss.weld.tests.clustering.login;
 
-import static org.jboss.arquillian.ajocado.Ajocado.elementPresent;
-import static org.jboss.arquillian.ajocado.Ajocado.waitForHttp;
-import static org.jboss.arquillian.ajocado.Ajocado.waitModel;
-import static org.jboss.arquillian.ajocado.locator.LocatorFactory.id;
-import static org.jboss.arquillian.ajocado.locator.LocatorFactory.xp;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.jboss.arquillian.ajocado.locator.IdLocator;
-import org.jboss.arquillian.ajocado.locator.XPathLocator;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
@@ -23,6 +13,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.weld.tests.clustering.ClusterTestBase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -30,14 +21,14 @@ public class LoginClusterTest extends ClusterTestBase
 {
    protected String MAIN_PAGE = "home.jsf";
    
-   protected XPathLocator LOGGED_IN = xp("//li[contains(text(),'Welcome')]");
-   protected XPathLocator LOGGED_OUT = xp("//li[contains(text(),'Goodbye')]");
+   private static final By LOGGED_IN = By.xpath("//li[contains(text(),'Welcome')]");
+   private static final By LOGGED_OUT = By.xpath("//li[contains(text(),'Goodbye')]");
    
-   protected IdLocator USERNAME_FIELD = id("loginForm:username");
-   protected IdLocator PASSWORD_FIELD = id("loginForm:password");
+   private static final By USERNAME_FIELD = By.id("loginForm:username");
+   private static final By PASSWORD_FIELD = By.id("loginForm:password");
 
-   protected IdLocator LOGIN_BUTTON = id("loginForm:login");
-   protected IdLocator LOGOUT_BUTTON = id("loginForm:logout");
+   private static final By LOGIN_BUTTON = By.id("loginForm:login");
+   private static final By LOGOUT_BUTTON = By.id("loginForm:logout");
 
    public static WebArchive createTestDeployment() {
       return ShrinkWrap.create(WebArchive.class, "weld-clustering-tests.war")
@@ -74,14 +65,18 @@ public class LoginClusterTest extends ClusterTestBase
       controller.start(CONTAINER2);
       deployer.deploy(DEPLOYMENT2);
 
-      selenium.open(new URL(contextPath1 + "/" + MAIN_PAGE));
+      driver.navigate().to(new URL(contextPath1 + "/" + MAIN_PAGE));
+      //selenium.open();
 
-      waitModel.until(elementPresent.locator(USERNAME_FIELD));
-      assertFalse("User should not be logged in!", selenium.isElementPresent(LOGGED_IN));
-      selenium.type(USERNAME_FIELD, "demo");
-      selenium.type(PASSWORD_FIELD, "demo");
-      waitForHttp(selenium).click(LOGIN_BUTTON);
-      assertTrue("User should be logged in!", selenium.isElementPresent(LOGGED_IN));
+      checkElementPresent(driver, USERNAME_FIELD, "username field should be present");
+      
+      checkElementNotPresent(driver, LOGGED_IN, "User should not be logged in!");
+      
+      driver.findElement(USERNAME_FIELD).sendKeys("demo");
+      driver.findElement(PASSWORD_FIELD).sendKeys("demo");
+      driver.findElement(LOGIN_BUTTON).click();
+
+      checkElementPresent(driver, LOGGED_IN, "User should be logged in!");
 
       deployer.undeploy(DEPLOYMENT1);
       controller.stop(CONTAINER1);
@@ -89,11 +84,11 @@ public class LoginClusterTest extends ClusterTestBase
       Thread.sleep(GRACE_TIME_TO_REPLICATE);
 
       String address = getAddressForSecondInstance();
-      selenium.open(new URL(contextPath2 + "/" + address));
+      driver.navigate().to(new URL(contextPath2 + "/" + address));
       
-      assertTrue("User should be logged in!", selenium.isElementPresent(LOGOUT_BUTTON));
-      waitForHttp(selenium).click(LOGOUT_BUTTON);
-      assertTrue("User should not be logged in!", selenium.isElementPresent(LOGGED_OUT));
+      checkElementPresent(driver, LOGOUT_BUTTON, "User should be logged in!");
+      driver.findElement(LOGOUT_BUTTON).click();
+      checkElementPresent(driver, LOGGED_OUT, "User should not be logged in!");
 
       deployer.undeploy(DEPLOYMENT2);
       controller.stop(CONTAINER2);

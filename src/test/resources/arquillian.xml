@@ -83,5 +83,9 @@
         </container>
 
     </group>
-    
+
+    <extension qualifier="selenium-server">
+        <property name="enable">true</property>
+    </extension>
+
 </arquillian>

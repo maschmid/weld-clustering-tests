@@ -2,12 +2,15 @@ package org.jboss.weld.tests.clustering;
 
 import java.net.MalformedURLException;
 
-import org.jboss.arquillian.ajocado.framework.AjaxSelenium;
 import org.jboss.arquillian.container.test.api.ContainerController;
 import org.jboss.arquillian.container.test.api.Deployer;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.junit.Assert;
 import org.junit.Before;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 
 public abstract class ClusterTestBase
 {
@@ -26,7 +29,7 @@ public abstract class ClusterTestBase
    protected Deployer deployer;
 
    @Drone
-   protected AjaxSelenium selenium;
+   protected WebDriver driver;
    
    protected String contextPath1;
    protected String contextPath2;
@@ -38,8 +41,8 @@ public abstract class ClusterTestBase
        contextPath2 = System.getProperty("node2.contextPath");
    }
 
-   public String getAddressForSecondInstance() {
-      String loc = selenium.getLocation().toString();
+   protected String getAddressForSecondInstance() {
+      String loc = driver.getCurrentUrl();//selenium.getLocation().toString();
       String[] parsedStrings = loc.split("/");
       StringBuilder sb = new StringBuilder();
       for (int i = 4; i < parsedStrings.length; i++) {
@@ -52,7 +55,7 @@ public abstract class ClusterTestBase
       
       //if (selenium.isCookiePresent("JSESSIONID")) {
       if (!newAddress.contains(";")) {
-          sid = selenium.getCookieByName("JSESSIONID").getValue();
+          sid = driver.manage().getCookieNamed("JSESSIONID").getValue();
           firstPart = newAddress;
       } else {
           // get sessionid directly from browser URL if JSESSIONID cookie is not
@@ -63,8 +66,23 @@ public abstract class ClusterTestBase
 
       newAddress = firstPart + ";jsessionid=" + sid;
               
-      selenium.deleteAllVisibleCookies();
+      driver.manage().deleteAllCookies();
 
       return newAddress;
-  }
+   }
+   
+   protected void checkElementPresent(WebDriver driver, By by, String errorMsg) {
+      try {
+          Assert.assertTrue(errorMsg, driver.findElement(by) != null);
+      } catch (NoSuchElementException e) {
+          Assert.fail(errorMsg);
+      }
+   }
+   
+   protected void checkElementNotPresent(WebDriver driver, By by, String errorMsg) {
+      try {
+          Assert.assertTrue(errorMsg, driver.findElement(by) == null);
+      } catch (NoSuchElementException e) {
+      }
+   }
 }

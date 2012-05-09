@@ -22,16 +22,12 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jboss.arquillian.ajocado.locator.IdLocator;
-import org.jboss.arquillian.ajocado.locator.XPathLocator;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.weld.tests.clustering.ClusterTestBase;
 import org.junit.Test;
 import org.junit.Ignore;
+import org.openqa.selenium.By;
 
-import static org.jboss.arquillian.ajocado.locator.LocatorFactory.id;
-import static org.jboss.arquillian.ajocado.locator.LocatorFactory.xp;
-import static org.jboss.arquillian.ajocado.Ajocado.waitForHttp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -48,57 +44,56 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
     
     public static final long GRACE_TIME_TO_REPLICATE = 1000;
     
-    protected IdLocator GUESS_MESSAGES = id("numberGuess:messages");
-    protected XPathLocator GUESS_STATUS = xp("//div[contains(text(),'I'm thinking of ')]");
+    private static final By GUESS_MESSAGES = By.id("numberGuess:messages");
+    private static final By GUESS_STATUS = By.xpath("//div[contains(text(),'I'm thinking of ')]");
     
-    protected IdLocator GUESS_FIELD = id("numberGuess:inputGuess");
-    protected XPathLocator GUESS_FIELD_WITH_VALUE = xp("//input[@id='numberGuess:inputGuess'][@value=3]");
+    private static final By GUESS_FIELD = By.id("numberGuess:inputGuess");
+    private static final By GUESS_FIELD_WITH_VALUE = By.xpath("//input[@id='numberGuess:inputGuess'][@value=3]");
 
-    protected IdLocator GUESS_SUBMIT = id("numberGuess:guessButton");
-    protected IdLocator GUESS_RESTART = id("numberGuess:restartButton");
-    protected IdLocator GUESS_SMALLEST = id("numberGuess:smallest");
-    protected IdLocator GUESS_BIGGEST = id("numberGuess:biggest");
+    private static final  By GUESS_SUBMIT = By.id("numberGuess:guessButton");
+    private static final  By GUESS_RESTART = By.id("numberGuess:restartButton");
+    private static final  By GUESS_SMALLEST = By.id("numberGuess:smallest");
+    private static final  By GUESS_BIGGEST = By.id("numberGuess:biggest");
 
     protected String WIN_MSG = "Correct!";
     protected String LOSE_MSG = "No guesses left!";
     protected String HIGHER_MSG = "Higher!";
     protected String LOWER_MSG = "Lower!";
-    
+
     protected Pattern guessesNumberPattern = Pattern.compile("You have (\\d+) guesses remaining."); 
-    
+
     private GameState gameState;
-    
-    
+
     boolean browsersSwitched = false;
-    
+
     protected void resetForm() {
-        waitForHttp(selenium).click(GUESS_RESTART);
+        driver.findElement(GUESS_RESTART).click();
         gameState = null;
     }
 
     protected void enterGuess(int guess) throws InterruptedException {
         gameState.setGuess(guess);
-        selenium.type(GUESS_FIELD, String.valueOf(guess));
-        waitForHttp(selenium).click(GUESS_SUBMIT);
+        driver.findElement(GUESS_FIELD).clear();
+        driver.findElement(GUESS_FIELD).sendKeys(String.valueOf(guess));
+        driver.findElement(GUESS_SUBMIT).click();
     }
-    
+
     protected boolean isOnGuessPage() {
         return !(isOnWinPage() || isOnLosePage());
     }
 
     protected boolean isOnWinPage() {
-        String text = selenium.getText(GUESS_MESSAGES);
+        String text = driver.findElement(GUESS_MESSAGES).getText();
         return WIN_MSG.equals(text);
     }
 
     protected boolean isOnLosePage() {
-        String text = selenium.getText(GUESS_MESSAGES);
+        String text = driver.findElement(GUESS_MESSAGES).getText();
         return LOSE_MSG.equals(text);
     }
 
-    
     private Integer getRemainingGuesses() {
-        Matcher m = guessesNumberPattern.matcher(selenium.getBodyText());
+        Matcher m = guessesNumberPattern.matcher(driver.getPageSource());
         if (m.find()) {
             return Integer.parseInt(m.group(1));
         }
@@ -111,12 +106,12 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
      * Asserts the game state matches what the page displays
      */
     private void updateGameState() {
-        
+
         GameState nextState = new GameState();
         nextState.setRemainingGuesses(getRemainingGuesses());
-        nextState.setLargest(Integer.parseInt(selenium.getText(GUESS_BIGGEST)));
-        nextState.setSmallest(Integer.parseInt(selenium.getText(GUESS_SMALLEST)));              
-      
+        nextState.setLargest(Integer.parseInt(driver.findElement(GUESS_BIGGEST).getText()));
+        nextState.setSmallest(Integer.parseInt(driver.findElement(GUESS_SMALLEST).getText()));
+
         if (gameState == null) {
             // Initial state
             assertEquals("Remaining guesses dosn't match", 10, nextState.getRemainingGuesses());
@@ -127,8 +122,8 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
             nextState.setPreviousGuess(gameState.getGuess());
             assertEquals("Remaining guesses dosn't match", gameState.getRemainingGuesses() - 1, nextState.getRemainingGuesses());
 
-            boolean higher = selenium.isTextPresent(HIGHER_MSG);
-            boolean lower = selenium.isTextPresent(LOWER_MSG);
+            boolean higher = driver.getPageSource().contains(HIGHER_MSG);
+            boolean lower = driver.getPageSource().contains(LOWER_MSG);
             
             assertEquals(lower, (nextState.getLargest() < gameState.getLargest()));
             if (gameState.getGuess() != 0) {
@@ -147,14 +142,14 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
     }
     
     private void smartStep() throws InterruptedException {
-        updateGameState();       
+        updateGameState();
         enterGuess(gameState.getSmallest() + ((gameState.getLargest() - gameState.getSmallest()) / 2));
     }
     
     private void switchBrowsers() throws MalformedURLException {
         String address = getAddressForSecondInstance();
         String contextPath = browsersSwitched ? contextPath1 : contextPath2;
-        selenium.open(new URL(contextPath + "/" + address));
+        driver.navigate().to(new URL(contextPath + "/" + address));
         
         browsersSwitched = !browsersSwitched;
     }
@@ -169,7 +164,7 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
         controller.start(CONTAINER2);        
         deployer.deploy(DEPLOYMENT2);
         
-        selenium.open(new URL(contextPath1 + "/" + MAIN_PAGE));
+        driver.navigate().to(new URL(contextPath1 + "/" + MAIN_PAGE));
         
         // we always want to enter at least 3 guesses so that we can continue
         // in the other browser window with expected results
@@ -191,20 +186,19 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
             smartStep();
         }
         
-        assertTrue("Win page expected after playing smart.", isOnWinPage());      
+        assertTrue("Win page expected after playing smart.", isOnWinPage());
         
         deployer.undeploy(DEPLOYMENT2);
         controller.stop(CONTAINER2);
     }
     
     @Test
-    @Ignore
     @InSequence(2)
     public void guessingWithInterleavingTest() throws MalformedURLException, InterruptedException {
         controller.start(CONTAINER1);
         deployer.deploy(DEPLOYMENT1);
         
-        selenium.open(new URL(contextPath1 + "/" + MAIN_PAGE));      
+        driver.navigate().to(new URL(contextPath1 + "/" + MAIN_PAGE));
          
         for(;;) {
             
@@ -218,7 +212,7 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
                 controller.start(CONTAINER1);
                 deployer.deploy(DEPLOYMENT1);
                 
-                Thread.sleep(GRACE_TIME_TO_MEMBERSHIP_CHANGE);                               
+                Thread.sleep(GRACE_TIME_TO_MEMBERSHIP_CHANGE);
                 
                 deployer.undeploy(DEPLOYMENT2);
                 controller.stop(CONTAINER2);
@@ -231,16 +225,16 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
                 
                 deployer.undeploy(DEPLOYMENT1);
                 controller.stop(CONTAINER1);
-            }                       
+            }
             
             Thread.sleep(GRACE_TIME_TO_REPLICATE);
             
-            switchBrowsers();                       
+            switchBrowsers();
         }
         
-        assertTrue("Win page expected after playing smart.", isOnWinPage());      
+        assertTrue("Win page expected after playing smart.", isOnWinPage());
         
-        if (browsersSwitched) {           
+        if (browsersSwitched) {
             deployer.undeploy(DEPLOYMENT2);
             controller.stop(CONTAINER2);
         }
