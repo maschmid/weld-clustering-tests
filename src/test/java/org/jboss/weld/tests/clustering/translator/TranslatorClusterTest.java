@@ -64,9 +64,12 @@ public class TranslatorClusterTest extends ClusterTestBase
 
       driver.navigate().to(new URL(contextPath1 + "/" + MAIN_PAGE));
       
+      driver.findElement(INPUT_AREA).clear();
       driver.findElement(INPUT_AREA).sendKeys(ONE_SENTENCE);
       driver.findElement(TRANSLATE_BUTTON).click();
       assertTrue("One sentence translated into latin expected.", driver.getPageSource().contains(ONE_SENTENCE_TRANSLATED));
+      
+      driver.findElement(INPUT_AREA).clear();
       driver.findElement(INPUT_AREA).sendKeys(MORE_SENTENCES);
       driver.findElement(TRANSLATE_BUTTON).click();
       assertTrue("More sentences translated into latin expected.", driver.getPageSource().contains(MORE_SENTENCES_TRANSLATED));
@@ -83,9 +86,12 @@ public class TranslatorClusterTest extends ClusterTestBase
 
       assertTrue("Expected 3 sentences translated", driver.getPageSource().contains("3 sentences translated."));
       
+      driver.findElement(INPUT_AREA).clear();
       driver.findElement(INPUT_AREA).sendKeys(ONE_SENTENCE);
       driver.findElement(TRANSLATE_BUTTON).click();
       assertTrue("One sentence translated into latin expected.", driver.getPageSource().contains(ONE_SENTENCE_TRANSLATED));
+      
+      driver.findElement(INPUT_AREA).clear();
       driver.findElement(INPUT_AREA).sendKeys(MORE_SENTENCES);
       driver.findElement(TRANSLATE_BUTTON).click();
       assertTrue("More sentences translated into latin expected.", driver.getPageSource().contains(MORE_SENTENCES_TRANSLATED));
