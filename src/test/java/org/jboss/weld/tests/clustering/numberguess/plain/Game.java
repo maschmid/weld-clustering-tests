@@ -34,6 +34,9 @@ public class Game implements Serializable {
     @Inject
     @Random
     Instance<Integer> randomNumber;
+    
+    @Inject
+    Instance<Win> win;
 
     public Game() {
     }
@@ -69,7 +72,7 @@ public class Game implements Serializable {
         } else if (guess < number) {
             smallest = guess + 1;
         } else if (guess == number) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Correct!"));
+        	win.get().win();
         }
         remainingGuesses--;
     }
