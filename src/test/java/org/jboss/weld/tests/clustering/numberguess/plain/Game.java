@@ -35,6 +35,7 @@ public class Game implements Serializable {
     @Random
     Instance<Integer> randomNumber;
     
+    // WELD-1221
     @Inject
     Instance<Win> win;
 
