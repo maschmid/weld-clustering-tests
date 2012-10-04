@@ -16,7 +16,7 @@ public class PlainNumberGuessClusterTest extends NumberGuessClusterTest {
 	
 	 public static WebArchive createTestDeployment() {
 		 return ShrinkWrap.create(WebArchive.class, "weld-clustering-tests.war")
-				 .addClasses(Game.class, Generator.class, MaxNumber.class, Random.class)
+				 .addClasses(Game.class, Generator.class, MaxNumber.class, Random.class, Win.class)
 				 .addAsWebResource("numberguess/home.xhtml", "home.xhtml")
 				 .addAsWebResource("numberguess/index.html", "index.html")
 				 .addAsWebResource("numberguess/template.xhtml", "template.xhtml")
