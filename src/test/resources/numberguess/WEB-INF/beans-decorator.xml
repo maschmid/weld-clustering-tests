@@ -8,5 +8,6 @@
     </decorators>
     <interceptors>
         <class>org.jboss.weld.tests.clustering.numberguess.decorator.AutoResetInterceptor</class>
+        <class>org.jboss.weld.tests.clustering.numberguess.decorator.MethodLogInterceptor</class>
     </interceptors>
 </beans>

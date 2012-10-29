@@ -44,6 +44,7 @@ public class GameBean implements Serializable, Game {
         return guess;
     }
 
+    @MethodLog
     public void setGuess(int guess) {
         this.guess = guess;
     }

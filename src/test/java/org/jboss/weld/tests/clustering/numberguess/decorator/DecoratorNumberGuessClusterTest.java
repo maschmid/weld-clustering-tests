@@ -17,6 +17,7 @@ public class DecoratorNumberGuessClusterTest extends NumberGuessClusterTest {
 	 public static WebArchive createTestDeployment() {
 		 return ShrinkWrap.create(WebArchive.class, "weld-clustering-tests.war")
 				 .addClasses(AutoReset.class, AutoResetInterceptor.class, Game.class, 
+						 MethodLogInterceptor.class, MethodLog.class, 
 						 GameBean.class, GuessCheckDecorator.class, MaxNumber.class, MockGenerator.class, 
 						 ProductionGenerator.class, Random.class)
 				 .addAsWebResource("numberguess/home.xhtml", "home.xhtml")
