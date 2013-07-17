@@ -60,9 +60,11 @@ public class LoginClusterTest extends ClusterTestBase
    @Test
    public void loginAndOutTest() throws MalformedURLException, InterruptedException {
       controller.start(CONTAINER1);
+      Thread.sleep(1000);
       deployer.deploy(DEPLOYMENT1);
 
       controller.start(CONTAINER2);
+      Thread.sleep(1000);
       deployer.deploy(DEPLOYMENT2);
 
       driver.navigate().to(new URL(contextPath1 + "/" + MAIN_PAGE));
