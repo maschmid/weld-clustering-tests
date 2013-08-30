@@ -43,6 +43,7 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
     protected String MAIN_PAGE = "home.jsf";
     
     public static final long GRACE_TIME_TO_REPLICATE = 1000;
+    public static final long SESSION_EXPIRE_WAIT = 120000;
     
     private static final By GUESS_MESSAGES = By.id("numberGuess:messages");
     private static final By GUESS_STATUS = By.xpath("//div[contains(text(),'I'm thinking of ')]");
@@ -187,7 +188,9 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
         }
         
         assertTrue("Win page expected after playing smart.", isOnWinPage());
-        
+
+        Thread.sleep(SESSION_EXPIRE_WAIT);
+       
         deployer.undeploy(DEPLOYMENT2);
         controller.stop(CONTAINER2);
     }
@@ -226,9 +229,9 @@ public abstract class NumberGuessClusterTest extends ClusterTestBase {
                 deployer.undeploy(DEPLOYMENT1);
                 controller.stop(CONTAINER1);
             }
-            
+ 
             Thread.sleep(GRACE_TIME_TO_REPLICATE);
-            
+
             switchBrowsers();
         }
         
