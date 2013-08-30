@@ -268,7 +268,7 @@
         <node1.jbossHome></node1.jbossHome>
         <node2.jbossHome></node2.jbossHome>
         <node1.portOffset>0</node1.portOffset>
-        <node2.portOffset>0</node1.portOffset>
+        <node2.portOffset>0</node2.portOffset>
         <node1.multicastAddress>230.0.0.4</node1.multicastAddress>
         <node2.multicastAddress>230.0.0.4</node2.multicastAddress>
     </properties>
