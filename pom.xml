@@ -191,6 +191,7 @@
                                 <node1.managementPort>${node1.managementPort}</node1.managementPort>
                                 <node1.jbossHome>${node1.jbossHome}</node1.jbossHome>
                                 <node1.nodeName>${node1.nodeName}</node1.nodeName>
+                                <node1.portOffset>${node1.portOffset}</node1.portOffset>
 
                                 <node2.contextPath>${node2.contextPath}</node2.contextPath>
                                 <node2.managementAddress>${node2.managementAddress}
@@ -198,6 +199,7 @@
                                 <node2.managementPort>${node2.managementPort}</node2.managementPort>
                                 <node2.jbossHome>${node2.jbossHome}</node2.jbossHome>
                                 <node2.nodeName>${node2.nodeName}</node2.nodeName>
+                                <node2.portOffset>${node2.portOffset}</node2.portOffset>
                                 <arquillian.launch>${arquillian}</arquillian.launch>
                             </systemPropertyVariables>
 
@@ -265,6 +267,8 @@
         <node2.contextPath>http://127.0.2.1:8080/weld-clustering-tests</node2.contextPath>
         <node1.jbossHome></node1.jbossHome>
         <node2.jbossHome></node2.jbossHome>
+        <node1.portOffset>0</node1.portOffset>
+        <node2.portOffset>0</node1.portOffset>
     </properties>
 
 </project>

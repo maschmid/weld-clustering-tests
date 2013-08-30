@@ -67,7 +67,7 @@
                 <property name="managementAddress">${node1.managementAddress:127.0.1.1}</property>
                 <property name="managementPort">${node1.managementPort:9999}</property>
                 <property name="jbossHome">${node1.jbossHome}</property>
-                <property name="javaVmArguments">-Djboss.node.name=${node1.nodeName:node1} -Djava.net.preferIPv4Stack=true -Xmx1024m -XX:MaxPermSize=512m</property>
+                <property name="javaVmArguments">-Djboss.node.name=${node1.nodeName:node1} -Djava.net.preferIPv4Stack=true -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=${node1.portOffset:0}</property>
                 <property name="serverConfig">${jboss.server.config.file.name:standalone-ha.xml}</property>
             </configuration>
         </container>
@@ -77,7 +77,7 @@
                 <property name="managementAddress">${node2.managementAddress:127.0.2.1}</property>
                 <property name="managementPort">${node2.managementPort:9999}</property>
                 <property name="jbossHome">${node2.jbossHome}</property>
-                <property name="javaVmArguments">-Djboss.node.name=${node2.nodeName:node2} -Djava.net.preferIPv4Stack=true -Xmx1024m -XX:MaxPermSize=512m</property>
+                <property name="javaVmArguments">-Djboss.node.name=${node2.nodeName:node2} -Djava.net.preferIPv4Stack=true -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=${node2.portOffset:0}</property>
                 <property name="serverConfig">${jboss.server.config.file.name:standalone-ha.xml}</property>
             </configuration>
         </container>
