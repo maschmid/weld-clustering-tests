@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application PUBLIC
+	"-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN"
+	"http://java.sun.com/dtd/application_1_3.dtd">
+<application>
+  <display-name>weld-jsf-translator-ear</display-name>
+  <description>Ear Example for the reference implementation of JSR 299: Weld</description>
+  <module>
+    <web>
+      <web-uri>weld-translator.war</web-uri>
+      <context-root>/weld-clustering-tests</context-root>
+    </web>
+  </module>
+  <module>
+    <ejb>weld-translator.jar</ejb>
+  </module>
+</application>
