@@ -45,6 +45,13 @@
             <scope>provided</scope>
             <version>1.0-SP4</version>
         </dependency>
+        
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <scope>provided</scope>
+            <version>1.1</version>
+        </dependency>  
 
         <dependency>
             <groupId>org.jboss.spec.javax.ejb</groupId>
@@ -192,6 +199,7 @@
                                 <node1.jbossHome>${node1.jbossHome}</node1.jbossHome>
                                 <node1.nodeName>${node1.nodeName}</node1.nodeName>
                                 <node1.portOffset>${node1.portOffset}</node1.portOffset>
+                                <node1.multicastAddress>${node1.multicastAddress}</node1.multicastAddress>
 
                                 <node2.contextPath>${node2.contextPath}</node2.contextPath>
                                 <node2.managementAddress>${node2.managementAddress}
@@ -200,6 +208,8 @@
                                 <node2.jbossHome>${node2.jbossHome}</node2.jbossHome>
                                 <node2.nodeName>${node2.nodeName}</node2.nodeName>
                                 <node2.portOffset>${node2.portOffset}</node2.portOffset>
+                                <node2.multicastAddress>${node2.multicastAddress}</node2.multicastAddress>
+
                                 <arquillian.launch>${arquillian}</arquillian.launch>
                             </systemPropertyVariables>
 

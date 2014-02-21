@@ -24,7 +24,6 @@ public class ManagedBeanUserManager implements UserManager {
 
     private User newUser = new User();
 
-    @Override
     @SuppressWarnings("unchecked")
     @Produces
     @Named
@@ -43,7 +42,6 @@ public class ManagedBeanUserManager implements UserManager {
         }
     }
 
-    @Override
     public String addUser() throws Exception {
         try {
             try {
@@ -60,12 +58,10 @@ public class ManagedBeanUserManager implements UserManager {
         }
     }
 
-    @Override
     public User getNewUser() {
         return newUser;
     }
 
-    @Override
     public void setNewUser(User newUser) {
         this.newUser = newUser;
     }
