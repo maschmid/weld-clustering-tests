@@ -85,7 +85,7 @@
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
-            <version>1.0.4.Final</version>
+            <version>1.1.2.Final</version>
         </dependency>
 
         <dependency>
@@ -127,7 +127,7 @@
                 <dependency>
                     <groupId>org.wildfly</groupId>
                     <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>8.0.0.Alpha1</version>
+                    <version>8.0.0.Final</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -153,6 +153,7 @@
                                 <node2.managementPort>${node2.managementPort}</node2.managementPort>
                                 <node2.jbossHome>${node2.jbossHome}</node2.jbossHome>
                                 <node2.nodeName>${node2.nodeName}</node2.nodeName>
+                                <node2.portOffset>${node2.portOffset}</node2.portOffset>
                                 <arquillian.launch>${arquillian}</arquillian.launch>
                             </systemPropertyVariables>
 
